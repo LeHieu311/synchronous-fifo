@@ -41,6 +41,19 @@ All functional operations occur on the rising edge of `clk`.
 
 ---
 
+## FIFO Operation
+### Reset Behavior
+rst_n is synchronous to clock and active-low. When rst_n == 0 at a rising clock edge, reset has highest
+priority and both read/write requests are ignored.
+
+### Write Operation
+On each rising edge of clk, when rst_n = 1, wr_en = 1 and full = 0, din is accepted and appended to
+the FIFO. If full = 1, the write request is rejected and must not change the logical FIFO contents.
+
+### Read Operation
+On each rising edge of clk, when rst_n = 1, rd_en = 1 and empty = 0, the oldest valid FIFO entry is
+removed and presented on dout. If empty = 1, the read request is rejected, dout clear to 0.
+
 
 #  Test Scenarios
 The verification environment covers the following test cases.
