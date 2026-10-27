@@ -56,21 +56,21 @@ removed and presented on dout. If empty = 1, the read request is rejected, dout 
 
 
 #  Test Scenarios
-The verification environment covers the following test cases.
 
-- TC01: Synchronous Reset 
-- TC02: Normal Write 
-- TC03: Fill FIFO to Full 
-- TC04: Write While Full 
-- TC05: Normal Read 
-- TC06: Read While Empty 
-- TC07: Simultaneous Read and Write 
-- TC08: Simultaneous Read and Write While Full 
-- TC09: Simultaneous Read and Write While Empty 
-- TC10: FIFO Ordering and Wrap-Around 
+The UVM verification environment covers the following test scenarios:
 
-These scenarios are defined in the FIFO functional verification specification. 
+| Test ID | Test Case | Initial Condition | Stimulus | Expected Behavior |
+|---|---|---|---|---|
+| **TC01** | Synchronous Reset | FIFO may contain valid data | Assert `rst_n = 0` and apply a rising clock edge | FIFO becomes empty, `empty = 1`, `full = 0`, `dout = 0`. Read/Write requests are ignored |
+| **TC02** | Normal Write | FIFO is empty and not full | Set `wr_en = 1`, `rd_en = 0`, and apply valid `din` | Data is appended to the FIFO and `empty` becomes `0` |
+| **TC03** | Fill FIFO to Full | FIFO is empty | Perform `DEPTH` valid write operations | All data is accepted in order. After the final write, `full = 1` and `empty = 0` |
+| **TC04** | Write While Full | FIFO is full | Set `wr_en = 1`, `rd_en = 0`, and apply new `din` | Write request is rejected. FIFO contents remain unchanged and `full = 1` |
+| **TC05** | Normal Read | FIFO contains valid data | Set `rd_en = 1`, `wr_en = 0` | Oldest FIFO entry is presented on `dout` and FIFO count decreases |
+| **TC06** | Read While Empty | FIFO is empty | Set `rd_en = 1`, `wr_en = 0` | Read request is rejected, `empty = 1`, and `dout = 0` |
+| **TC07** | Simultaneous Read/Write | FIFO is neither empty nor full | Set `wr_en = 1`, `rd_en = 1` with valid `din` | Both operations are accepted. Oldest data is read while new data is written |
+| **TC08** | Read/Write While Full | FIFO is full | Set `wr_en = 1`, `rd_en = 1` with valid `din` | Read is accepted, write is rejected because FIFO was full before the clock edge. `full` becomes `0` |
+| **TC09** | Read/Write While Empty | FIFO is empty | Set `wr_en = 1`, `rd_en = 1` with valid `din` | Write is accepted, read is rejected because FIFO was empty before the clock edge. `dout = 0` and `empty` becomes `0` |
+| **TC10** | FIFO Ordering & Wrap-Around | FIFO is empty | Write and read multiple entries to force pointer wrap-around | All data must be returned in the exact order in which valid writes were accepted |
 
----
 
 #
