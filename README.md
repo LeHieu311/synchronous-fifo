@@ -17,11 +17,30 @@ The main objective is to verify the functional correctness of the FIFO design us
 - Scoreboard-based reference model
 
 
-##  DUT Specification
+### Parameters
 
-The FIFO uses the following default configuration:
-DATA_WIDTH [7:0] : Number of bits per FIFO entry
-DEPTH [7:0] : Maximum number of entries stored
+| Parameter | Default | Description |
+|---|---:|---|
+| `DATA_WIDTH` | 8 | Number of bits per FIFO entry |
+| `DEPTH` | 8 | Maximum number of entries stored |
+
+### Interface
+
+| Signal | Direction | Width | Description |
+|---|---|---:|---|
+| `clk` | Input | 1 | Sampling clock |
+| `rst_n` | Input | 1 | Synchronous active-low reset |
+| `wr_en` | Input | 1 | Write request |
+| `rd_en` | Input | 1 | Read request |
+| `din` | Input | `DATA_WIDTH` | Write data |
+| `dout` | Output | `DATA_WIDTH` | Registered read data |
+| `full` | Output | 1 | FIFO full flag |
+| `empty` | Output | 1 | FIFO empty flag |
+
+All functional operations occur on the rising edge of `clk`.
+
+---
+
 
 #  Test Scenarios
 The verification environment covers the following test cases.
